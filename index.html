@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp GPT - Agente IA para WhatsApp</title>
+    <meta name="description" content="Crie seu agente de IA para WhatsApp em minutos, sem conhecimento técnico">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2325D366'><path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.893 3.488'/></svg>">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p id="loading-text">Configurando agente...</p>
+        </div>
+    </div>
+
+    <!-- Welcome Step -->
+    <div id="welcome-step" class="step active">
+        <div class="welcome-container">
+            <div class="welcome-content">
+                <div class="welcome-header">
+                    <div class="logo-container">
+                        <i data-lucide="message-square" class="logo-icon"></i>
+                    </div>
+                    <h1 class="main-title">WhatsApp GPT</h1>
+                    <p class="main-subtitle">
+                        Crie seu agente de IA para WhatsApp em minutos, sem conhecimento técnico
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-lucide="zap"></i>
+                        </div>
+                        <h3 class="feature-title">Configuração Rápida</h3>
+                        <p class="feature-description">
+                            Configure seu agente em 3 passos simples. Sem programação necessária.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-lucide="shield"></i>
+                        </div>
+                        <h3 class="feature-title">Seguro e Confiável</h3>
+                        <p class="feature-description">
+                            Seus dados ficam seguros. Cada empresa tem sua própria instância isolada.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i data-lucide="message-square"></i>
+                        </div>
+                        <h3 class="feature-title">IA Inteligente</h3>
+                        <p class="feature-description">
+                            Powered by GPT-4o, responde com base no conhecimento da sua empresa.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="welcome-actions">
+                    <button id="start-button" class="btn btn-primary btn-large">
+                        Começar Agora - É Grátis!
+                    </button>
+                    <p class="welcome-benefits">
+                        ✅ Sem cartão de crédito • ✅ Configuração em 5 minutos • ✅ Suporte em português
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Setup Step -->
+    <div id="setup-step" class="step">
+        <div class="setup-container">
+            <div class="setup-content">
+                <div class="setup-header">
+                    <h2 class="step-title">Configure Seu Agente WhatsApp</h2>
+                    <p class="step-subtitle">
+                        Preencha as informações da sua empresa para personalizar as respostas
+                    </p>
+                </div>
+
+                <div class="setup-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Informações da Empresa</h3>
+                        <p class="card-description">
+                            Estas informações serão usadas para treinar seu agente de IA
+                        </p>
+                    </div>
+
+                    <form id="setup-form" class="setup-form">
+                        <div class="form-group">
+                            <label for="business_name" class="form-label">Nome da Empresa *</label>
+                            <input 
+                                type="text" 
+                                id="business_name" 
+                                name="business_name"
+                                class="form-input" 
+                                placeholder="Ex: Restaurante Sabor Moçambicano"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business_description" class="form-label">Descrição do Negócio *</label>
+                            <textarea 
+                                id="business_description" 
+                                name="business_description"
+                                class="form-textarea" 
+                                rows="3"
+                                placeholder="Ex: Restaurante especializado em comida tradicional moçambicana, localizado em Maputo. Servimos pratos como matapa, xima, caril de camarão..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="business_hours" class="form-label">Horário de Funcionamento</label>
+                            <input 
+                                type="text" 
+                                id="business_hours" 
+                                name="business_hours"
+                                class="form-input" 
+                                placeholder="Ex: Segunda a Sábado: 11h às 22h, Domingo: 12h às 20h"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact_info" class="form-label">Informações de Contacto</label>
+                            <input 
+                                type="text" 
+                                id="contact_info" 
+                                name="contact_info"
+                                class="form-input" 
+                                placeholder="Ex: Telefone: +258 84 123 4567, Email: info@restaurante.co.mz"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="knowledge_text" class="form-label">Conhecimento Adicional</label>
+                            <textarea 
+                                id="knowledge_text" 
+                                name="knowledge_text"
+                                class="form-textarea" 
+                                rows="4"
+                                placeholder="Ex: Cardápio, preços, políticas, perguntas frequentes, informações sobre produtos/serviços..."
+                            ></textarea>
+                            <p class="form-help">
+                                Adicione qualquer informação que o agente deve saber para responder aos clientes
+                            </p>
+                        </div>
+
+                        <div id="error-message" class="error-message hidden">
+                            <i data-lucide="alert-circle"></i>
+                            <span id="error-text"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="back-button" class="btn btn-secondary">
+                                Voltar
+                            </button>
+                            <button type="submit" id="submit-button" class="btn btn-primary btn-flex">
+                                Criar Agente WhatsApp
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Step -->
+    <div id="qrcode-step" class="step">
+        <div class="qrcode-container">
+            <div class="qrcode-content">
+                <div class="qrcode-header">
+                    <div class="success-icon">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <h2 class="step-title">Agente Criado com Sucesso!</h2>
+                    <p class="step-subtitle">
+                        Agora conecte seu WhatsApp escaneando o código QR
+                    </p>
+                </div>
+
+                <div class="qrcode-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i data-lucide="smartphone"></i>
+                            Conectar WhatsApp
+                        </h3>
+                        <p class="card-description">
+                            Use seu celular para escanear o código QR abaixo
+                        </p>
+                    </div>
+
+                    <div class="qrcode-display">
+                        <div id="qr-container" class="qr-container">
+                            <div class="qr-loading">
+                                <div class="spinner"></div>
+                                <p>Gerando código QR...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="instructions-card">
+                        <h4 class="instructions-title">Como conectar:</h4>
+                        <ol class="instructions-list">
+                            <li>Abra o WhatsApp no seu celular</li>
+                            <li>Toque nos três pontos (⋮) no canto superior direito</li>
+                            <li>Selecione "Aparelhos conectados"</li>
+                            <li>Toque em "Conectar um aparelho"</li>
+                            <li>Escaneie o código QR acima</li>
+                        </ol>
+                    </div>
+
+                    <button id="check-connection-button" class="btn btn-primary btn-full">
+                        Verificar Conexão
+                    </button>
+
+                    <p class="qr-note">
+                        O código QR expira em alguns minutos. Recarregue a página se necessário.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Step -->
+    <div id="success-step" class="step">
+        <div class="success-container">
+            <div class="success-content">
+                <div class="success-header">
+                    <div class="celebration-icon">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <h1 class="celebration-title">🎉 Parabéns!</h1>
+                    <p class="celebration-subtitle">
+                        Seu agente WhatsApp GPT está ativo e pronto para atender clientes!
+                    </p>
+                </div>
+
+                <div class="agent-info-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Informações do Seu Agente</h3>
+                    </div>
+                    <div class="agent-info-list">
+                        <div class="info-item">
+                            <span class="info-label">Nome da Empresa:</span>
+                            <span id="agent-business-name" class="info-badge">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span class="info-badge status-active">✅ Ativo</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">IA:</span>
+                            <span class="info-badge">GPT-4o</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-steps-card">
+                    <h3 class="next-steps-title">O que acontece agora?</h3>
+                    <ul class="next-steps-list">
+                        <li>✅ Seu WhatsApp já está conectado ao agente de IA</li>
+                        <li>✅ O agente responderá automaticamente às mensagens</li>
+                        <li>✅ As respostas são baseadas nas informações da sua empresa</li>
+                        <li>✅ Você pode continuar usando o WhatsApp normalmente</li>
+                    </ul>
+                </div>
+
+                <div class="success-actions">
+                    <button id="create-another-button" class="btn btn-primary btn-large btn-full">
+                        Criar Outro Agente
+                    </button>
+                    <p class="support-text">
+                        Precisa de ajuda? Entre em contacto connosco pelo WhatsApp: +258 84 000 0000
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button id="language-button" class="language-button">
+            <i data-lucide="globe"></i>
+            <span id="current-language">PT</span>
+        </button>
+        <div id="language-dropdown" class="language-dropdown hidden">
+            <button class="language-option" data-lang="pt">🇵🇹 Português</button>
+            <button class="language-option" data-lang="en">🇬🇧 English</button>
+            <button class="language-option" data-lang="fr">🇫🇷 Français</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
